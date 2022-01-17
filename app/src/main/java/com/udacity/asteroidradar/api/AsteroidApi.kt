@@ -1,10 +1,10 @@
 package com.udacity.asteroidradar.api
 
-import android.util.Log
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.data.Asteroid
 import com.udacity.asteroidradar.Constants
+import com.udacity.asteroidradar.PictureOfDay
 import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -12,7 +12,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 
 
@@ -25,11 +24,14 @@ private val retrofit = Retrofit.Builder()
 
 private interface AsteroidApiService {
     // Help source https://stackoverflow.com/questions/58567053/how-to-add-url-parameter-in-a-retrofit-get-request-in-kotlin
-    @GET("neo/rest/v1/feed")
+    @GET(Constants.URI_NEO_FEED)
     suspend fun getAsteroids(
         @Query("start_date") startDate: String,
         @Query("end_date") endDate: String,
         @Query("api_key") apiKey: String) : String
+
+    @GET(Constants.URI_POD)
+    suspend fun getPictureOfTheDay(@Query("api_key") apiKey: String) : PictureOfDay
 }
 
 object AsteroidApi {
@@ -46,5 +48,9 @@ object AsteroidApi {
         val stringResult = retrofitService.getAsteroids(startDate, endDate, Constants.API_KEY)
 
         return parseAsteroidsJsonResult(JSONObject(stringResult))
+    }
+
+    suspend fun getPictureOfTheDay(): PictureOfDay {
+        return retrofitService.getPictureOfTheDay(Constants.API_KEY)
     }
 }
