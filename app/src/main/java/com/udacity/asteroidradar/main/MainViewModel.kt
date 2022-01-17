@@ -13,7 +13,7 @@ class MainViewModel : ViewModel() {
     fun getAsteroids() {
         viewModelScope.launch {
             try {
-                val result = AsteroidApi.retrofitService.getAsteroids("2015-09-07", "2015-09-07")
+                val result = AsteroidApi.getAsteroids()
                 val a = ""
             } catch (e: Throwable) {
                 Log.e(TAG, e.message.toString())
