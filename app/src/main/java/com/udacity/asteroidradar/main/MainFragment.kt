@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.udacity.asteroidradar.AsteroidRadarApplication
 import com.udacity.asteroidradar.R
@@ -36,13 +38,19 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val adapter = AsteroidListAdapter(onItemClicked = {
+            findNavController().navigate(MainFragmentDirections.actionShowDetail(it))
+        })
+
+        binding.asteroidRecycler.adapter = adapter
+        binding.asteroidRecycler.layoutManager = LinearLayoutManager(this.requireContext())
+
         viewModel.getPictureOfTheDay()
-        // RecyclerView
-        // Adapter
 
         viewModel.asteroids.observe(this.viewLifecycleOwner) { items ->
-            val all = items
-            // TODO Add to adapter
+            items.let {
+                adapter.submitList(it)
+            }
         }
 
         viewModel.pictureOfDay.observe(viewLifecycleOwner, {

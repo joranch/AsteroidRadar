@@ -19,10 +19,18 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
     private var _pictureOfTheDay = MutableLiveData<PictureOfDay>()
     val pictureOfDay: LiveData<PictureOfDay> = _pictureOfTheDay
 
+    init {
+        getAsteroids()
+    }
+
     fun getAsteroids() {
         viewModelScope.launch {
             try {
                 val asteroids = AsteroidApi.getAsteroids()
+
+                asteroidDao.deleteExpiredAsteroids()
+                asteroidDao.insertAll(asteroids)
+                Log.d(TAG, "Inserted ${asteroids.size} asteroids")
             } catch (e: Throwable) {
                 Log.e(TAG, e.message.toString())
                 e.printStackTrace()

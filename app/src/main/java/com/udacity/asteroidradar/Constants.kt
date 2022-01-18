@@ -4,7 +4,4 @@ object Constants {
     const val API_QUERY_DATE_FORMAT = "yyyy-MM-dd"
     const val DEFAULT_END_DATE_DAYS = 7
     const val BASE_URL = "https://api.nasa.gov/"
-    const val API_KEY = "DEMO_KEY"
-    const val URI_NEO_FEED = "neo/rest/v1/feed"
-    const val URI_POD = "planetary/apod"
 }
