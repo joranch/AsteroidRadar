@@ -8,6 +8,9 @@ interface AsteroidDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(item: Asteroid)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(items: List<Asteroid>)
+
     @Delete
     fun delete(item: Asteroid)
 
