@@ -8,10 +8,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.udacity.asteroidradar.AsteroidRadarApplication
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import com.udacity.asteroidradar.workers.FetchAsteroidsWorker
+import java.util.concurrent.TimeUnit
 
 class MainFragment : Fragment() {
 
@@ -45,8 +51,6 @@ class MainFragment : Fragment() {
         binding.asteroidRecycler.adapter = adapter
         binding.asteroidRecycler.layoutManager = LinearLayoutManager(this.requireContext())
 
-        viewModel.getPictureOfTheDay()
-
         viewModel.asteroids.observe(this.viewLifecycleOwner) { items ->
             items.let {
                 adapter.submitList(it)
@@ -58,6 +62,8 @@ class MainFragment : Fragment() {
                 .centerCrop()
                 .into(binding.activityMainImageOfTheDay)
         })
+
+        createFetchAsteroidsWorker()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -67,5 +73,19 @@ class MainFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return true
+    }
+
+    private fun createFetchAsteroidsWorker() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .setRequiresCharging(true)
+            .build()
+
+        val periodicWorkRequest =
+            PeriodicWorkRequestBuilder<FetchAsteroidsWorker>(1, TimeUnit.DAYS)
+                .setConstraints(constraints)
+                .build()
+
+        WorkManager.getInstance().enqueue(periodicWorkRequest)
     }
 }

@@ -21,9 +21,10 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
 
     init {
         getAsteroids()
+        getPictureOfTheDay()
     }
 
-    fun getAsteroids() {
+    private fun getAsteroids() {
         viewModelScope.launch {
             try {
                 val asteroids = AsteroidApi.getAsteroids()
@@ -38,7 +39,7 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
         }
     }
 
-    fun getPictureOfTheDay() {
+    private fun getPictureOfTheDay() {
         viewModelScope.launch {
             try {
                 _pictureOfTheDay.value = AsteroidApi.getPictureOfTheDay()
