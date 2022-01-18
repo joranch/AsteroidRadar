@@ -61,6 +61,7 @@ class MainFragment : Fragment() {
             Glide.with(this).load(it.url)
                 .centerCrop()
                 .into(binding.activityMainImageOfTheDay)
+            binding.activityMainImageOfTheDay.contentDescription = it.title
         })
 
         createFetchAsteroidsWorker()
