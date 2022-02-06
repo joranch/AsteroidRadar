@@ -1,5 +1,5 @@
 # Asteroid Radar
-```
+
 Asteroid Radar fetches data from a NASA api to display information on upcoming near earth asteroids.
 
 The app uses the following techniques and libraries:
